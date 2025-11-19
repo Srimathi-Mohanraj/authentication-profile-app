@@ -1,0 +1,69 @@
+import { useState } from "react";
+import { auth } from "../firebase";
+import { signInWithEmailAndPassword } from "firebase/auth";
+import { Link, useNavigate } from "react-router-dom";
+
+export default function Login() {
+  const [form, setForm] = useState({ email: "", password: "" });
+  const [error, setError] = useState("");
+  const navigate = useNavigate();
+
+  const handleChange = (e) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    try {
+      await signInWithEmailAndPassword(auth, form.email, form.password);
+  navigate("/", { replace: true });
+
+    } catch (err) {
+      setError(err.message);
+    }
+  };
+
+  return (
+    <div className="min-h-screen flex items-center justify-center bg-slate-100">
+      <div className="bg-white shadow-lg rounded-xl p-8 w-full max-w-md">
+        <h2 className="text-2xl font-semibold mb-4 text-center">Login</h2>
+        {error && (
+          <p className="text-sm text-red-500 mb-2 text-center">{error}</p>
+        )}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <input
+            className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring"
+            name="email"
+            type="email"
+            placeholder="Email"
+            value={form.email}
+            onChange={handleChange}
+          />
+          <input
+            className="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring"
+            name="password"
+            type="password"
+            placeholder="Password"
+            value={form.password}
+            onChange={handleChange}
+          />
+
+          <button
+            type="submit"
+            className="w-full py-2 rounded-lg bg-slate-900 text-white hover:bg-slate-800 transition"
+          >
+            Login
+          </button>
+        </form>
+        <div className="mt-4 flex justify-between text-sm">
+          <Link className="text-blue-600" to="/register">
+            Create account
+          </Link>
+          <Link className="text-blue-600" to="/forgot-password">
+            Forgot password?
+          </Link>
+        </div>
+      </div>
+    </div>
+  );
+}

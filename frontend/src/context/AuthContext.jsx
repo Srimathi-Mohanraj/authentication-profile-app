@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { setPersistence, browserSessionPersistence } from "firebase/auth";
+import { setPersistence, browserSessionPersistence} from "firebase/auth";
 import { auth } from "../firebase";
 import {
   onAuthStateChanged,
@@ -21,8 +21,8 @@ export function AuthProvider({ children }) {
       console.error("Failed to set session persistence:", err)
     );
 
-    const unsub = onAuthStateChanged(auth, (firebaseUser) => {
-      setUser(firebaseUser);
+    const unsub = onAuthStateChanged(auth, (user) => {
+      setUser(user || null);
       setLoading(false);
     });
     return () => unsub();
